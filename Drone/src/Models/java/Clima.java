@@ -1,7 +1,7 @@
 /* Do not remove or modify this comment!  It is required for file identification!
 DNL
-platform:/resource/Drone/src/Models/dnl/EnviaImg.dnl
--460501220
+platform:/resource/Drone/src/Models/dnl/Clima.dnl
+2138538766
  Do not remove or modify this comment!  It is required for file identification! */
 package Models.java;
 
@@ -15,6 +15,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import com.ms4systems.devs.core.message.Message;
 import com.ms4systems.devs.core.message.MessageBag;
@@ -30,13 +31,19 @@ import com.ms4systems.devs.helpers.impl.SimulationOptionsImpl;
 import com.ms4systems.devs.simviewer.standalone.SimViewer;
 
 @SuppressWarnings("unused")
-public class EnviaImg extends AtomicModelImpl implements PhaseBased,
+public class Clima extends AtomicModelImpl implements PhaseBased,
     StateVariableBased {
     private static final long serialVersionUID = 1L;
+
+    //ID:SVAR:0
+    private static final int ID_CLIMAVALUE = 0;
 
     // Declare state variables
     private PropertyChangeSupport propertyChangeSupport =
         new PropertyChangeSupport(this);
+    protected ClimaType climaValue;
+
+    //ENDID
     String phase = "s0";
     String previousPhase = null;
     Double sigma = Double.POSITIVE_INFINITY;
@@ -46,16 +53,16 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
 
     // Input ports
     //ID:INP:0
-    public final Port<Serializable> inEnviaAnalise =
-        addInputPort("inEnviaAnalise", Serializable.class);
+    public final Port<Serializable> inVerificarClima =
+        addInputPort("inVerificarClima", Serializable.class);
 
     //ENDID
     // End input ports
 
     // Output ports
     //ID:OUTP:0
-    public final Port<Serializable> outComandoAplicar =
-        addOutputPort("outComandoAplicar", Serializable.class);
+    public final Port<ClimaType> outClimaValue =
+        addOutputPort("outClimaValue", ClimaType.class);
 
     //ENDID
     // End output ports
@@ -65,15 +72,15 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
     // This variable is just here so we can use @SuppressWarnings("unused")
     private final int unusedIntVariableForWarnings = 0;
 
-    public EnviaImg() {
-        this("EnviaImg");
+    public Clima() {
+        this("Clima");
     }
 
-    public EnviaImg(String name) {
+    public Clima(String name) {
         this(name, null);
     }
 
-    public EnviaImg(String name, Simulator simulator) {
+    public Clima(String name, Simulator simulator) {
         super(name, simulator);
     }
 
@@ -84,6 +91,14 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
 
         passivateIn("s0");
 
+        // Initialize Variables
+        //ID:INIT
+        Random gerador = new Random();
+        boolean estado = gerador.nextBoolean();
+        climaValue = new ClimaType(estado);
+
+        //ENDID
+        // End initialize variables
     }
 
     @Override
@@ -115,11 +130,11 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
 
         // Fire state transition functions
         if (phaseIs("s0")) {
-            if (input.hasMessages(inEnviaAnalise)) {
+            if (input.hasMessages(inVerificarClima)) {
                 ArrayList<Message<Serializable>> messageList =
-                    inEnviaAnalise.getMessages(input);
+                    inVerificarClima.getMessages(input);
 
-                holdIn("s1", 2.0);
+                holdIn("s1", 1.0);
 
                 return;
             }
@@ -143,7 +158,16 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
         MessageBag output = new MessageBagImpl();
 
         if (phaseIs("s1")) {
-            output.add(outComandoAplicar, null);
+
+            // Output event code
+            //ID:OUT:s1
+            Random gerador = new Random();
+            boolean estado = gerador.nextBoolean();
+            climaValue = new ClimaType(estado);
+            output.add(outClimaValue, climaValue);
+
+            //ENDID
+            // End output event code
         }
         return output;
     }
@@ -162,12 +186,12 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
 
         // Uncomment the following line to disable logging for this model
         // options.setDisableLogging(true);
-        EnviaImg model = new EnviaImg();
+        Clima model = new Clima();
         model.options = options;
 
         if (options.isDisableViewer()) { // Command line output only
             Simulation sim =
-                new SimulationImpl("EnviaImg Simulation", model, options);
+                new SimulationImpl("Clima Simulation", model, options);
             sim.startSimulation(0);
             sim.simulateIterations(Long.MAX_VALUE);
         } else { // Use SimViewer
@@ -185,21 +209,37 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
         propertyChangeSupport.removePropertyChangeListener(listener);
     }
 
+    // Getter/setter for climaValue
+    public void setClimaValue(ClimaType climaValue) {
+        propertyChangeSupport.firePropertyChange("climaValue", this.climaValue,
+            this.climaValue = climaValue);
+    }
+
+    public ClimaType getClimaValue() {
+        return this.climaValue;
+    }
+
+    // End getter/setter for climaValue
+
     // State variables
     public String[] getStateVariableNames() {
-        return new String[] {  };
+        return new String[] { "climaValue" };
     }
 
     public Object[] getStateVariableValues() {
-        return new Object[] {  };
+        return new Object[] { climaValue };
     }
 
     public Class<?>[] getStateVariableTypes() {
-        return new Class<?>[] {  };
+        return new Class<?>[] { ClimaType.class };
     }
 
     public void setStateVariableValue(int index, Object value) {
         switch (index) {
+
+            case ID_CLIMAVALUE:
+                setClimaValue((ClimaType) value);
+                return;
 
             default:
                 return;
@@ -226,13 +266,13 @@ public class EnviaImg extends AtomicModelImpl implements PhaseBased,
         URI dirUri;
         File dir;
         try {
-            dirUri = EnviaImg.class.getResource(".").toURI();
+            dirUri = Clima.class.getResource(".").toURI();
             dir = new File(dirUri);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             throw new RuntimeException(
                 "Could not find Models directory. Invalid model URL: " +
-                EnviaImg.class.getResource(".").toString());
+                Clima.class.getResource(".").toString());
         }
         boolean foundModels = false;
         while (dir != null && dir.getParentFile() != null) {

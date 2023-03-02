@@ -1,7 +1,7 @@
 /* Do not remove or modify this comment!  It is required for file identification!
 DNL
 platform:/resource/Drone/src/Models/dnl/Inicial.dnl
--1314714591
+1203393619
  Do not remove or modify this comment!  It is required for file identification! */
 package Models.java;
 
@@ -46,8 +46,8 @@ public class Inicial extends AtomicModelImpl implements PhaseBased,
 
     // Input ports
     //ID:INP:0
-    public final Port<Serializable> inParado =
-        addInputPort("inParado", Serializable.class);
+    public final Port<Serializable> inInicialCommand =
+        addInputPort("inInicialCommand", Serializable.class);
 
     //ENDID
     // End input ports
@@ -115,9 +115,9 @@ public class Inicial extends AtomicModelImpl implements PhaseBased,
 
         // Fire state transition functions
         if (phaseIs("s1")) {
-            if (input.hasMessages(inParado)) {
+            if (input.hasMessages(inInicialCommand)) {
                 ArrayList<Message<Serializable>> messageList =
-                    inParado.getMessages(input);
+                    inInicialCommand.getMessages(input);
 
                 holdIn("s0", 2.0);
 

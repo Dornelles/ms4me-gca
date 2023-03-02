@@ -24,24 +24,25 @@ public class Aplicacao extends CoupledModelImpl implements StateVariableBased{
 	}
 	public void make(){
 
-		EnviaImg EnviaImg = new EnviaImg();
-		addChildModel(EnviaImg);
-		Unidade Unidade = new Unidade();
-		addChildModel(Unidade);
-		CapturaImg CapturaImg = new CapturaImg();
-		addChildModel(CapturaImg);
+		Lavoura Lavoura = new Lavoura();
+		addChildModel(Lavoura);
+		Clima Clima = new Clima();
+		addChildModel(Clima);
 		Inicial Inicial = new Inicial();
 		addChildModel(Inicial);
+		Pulverizar Pulverizar = new Pulverizar();
+		addChildModel(Pulverizar);
 		Drone Drone = new Drone();
 		addChildModel(Drone);
-		Aplica Aplica = new Aplica();
-		addChildModel(Aplica);
-		addCoupling(Aplica.outParado,Inicial.inParado);
-		addCoupling(Inicial.outComando,Drone.inComando);
-		addCoupling(CapturaImg.outEnviaAnalise,EnviaImg.inEnviaAnalise);
-		addCoupling(Unidade.outCaptura,CapturaImg.inCaptura);
-		addCoupling(Drone.outComandoIr,Unidade.inComandoIr);
-		addCoupling(EnviaImg.outComandoAplicar,Aplica.inComandoAplicar);
+		CapturarImagem CapturarImagem = new CapturarImagem();
+		addChildModel(CapturarImagem);
+		addCoupling(Inicial.outComando,Lavoura.inComando);
+		addCoupling(Clima.outClimaValue,Drone.inClimaValue);
+		addCoupling(Pulverizar.outInicialCommand,Inicial.inInicialCommand);
+		addCoupling(Drone.outCI,CapturarImagem.inCI);
+		addCoupling(CapturarImagem.outPulverizarCommand,Pulverizar.inPulverizarCommand);
+		addCoupling(Lavoura.outVerificarClima,Clima.inVerificarClima);
+		addCoupling(Drone.outInicialCommand,Inicial.inInicialCommand);
 
 	}
     @Override

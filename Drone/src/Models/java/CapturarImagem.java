@@ -1,7 +1,7 @@
 /* Do not remove or modify this comment!  It is required for file identification!
 DNL
-platform:/resource/Drone/src/Models/dnl/Unidade.dnl
-859141786
+platform:/resource/Drone/src/Models/dnl/CapturarImagem.dnl
+907253838
  Do not remove or modify this comment!  It is required for file identification! */
 package Models.java;
 
@@ -30,7 +30,7 @@ import com.ms4systems.devs.helpers.impl.SimulationOptionsImpl;
 import com.ms4systems.devs.simviewer.standalone.SimViewer;
 
 @SuppressWarnings("unused")
-public class Unidade extends AtomicModelImpl implements PhaseBased,
+public class CapturarImagem extends AtomicModelImpl implements PhaseBased,
     StateVariableBased {
     private static final long serialVersionUID = 1L;
 
@@ -46,16 +46,16 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
 
     // Input ports
     //ID:INP:0
-    public final Port<Serializable> inComandoIr =
-        addInputPort("inComandoIr", Serializable.class);
+    public final Port<Serializable> inCI =
+        addInputPort("inCI", Serializable.class);
 
     //ENDID
     // End input ports
 
     // Output ports
     //ID:OUTP:0
-    public final Port<Serializable> outCaptura =
-        addOutputPort("outCaptura", Serializable.class);
+    public final Port<Serializable> outPulverizarCommand =
+        addOutputPort("outPulverizarCommand", Serializable.class);
 
     //ENDID
     // End output ports
@@ -65,15 +65,15 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
     // This variable is just here so we can use @SuppressWarnings("unused")
     private final int unusedIntVariableForWarnings = 0;
 
-    public Unidade() {
-        this("Unidade");
+    public CapturarImagem() {
+        this("CapturarImagem");
     }
 
-    public Unidade(String name) {
+    public CapturarImagem(String name) {
         this(name, null);
     }
 
-    public Unidade(String name, Simulator simulator) {
+    public CapturarImagem(String name, Simulator simulator) {
         super(name, simulator);
     }
 
@@ -94,7 +94,7 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
             getSimulator().modelMessage("Internal transition from s1");
 
             //ID:TRA:s1
-            passivateIn("s0");
+            holdIn("null", Double.POSITIVE_INFINITY);
 
             //ENDID
             return;
@@ -115,9 +115,9 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
 
         // Fire state transition functions
         if (phaseIs("s0")) {
-            if (input.hasMessages(inComandoIr)) {
+            if (input.hasMessages(inCI)) {
                 ArrayList<Message<Serializable>> messageList =
-                    inComandoIr.getMessages(input);
+                    inCI.getMessages(input);
 
                 holdIn("s1", 2.0);
 
@@ -143,7 +143,7 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
         MessageBag output = new MessageBagImpl();
 
         if (phaseIs("s1")) {
-            output.add(outCaptura, null);
+            output.add(outPulverizarCommand, null);
         }
         return output;
     }
@@ -162,12 +162,12 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
 
         // Uncomment the following line to disable logging for this model
         // options.setDisableLogging(true);
-        Unidade model = new Unidade();
+        CapturarImagem model = new CapturarImagem();
         model.options = options;
 
         if (options.isDisableViewer()) { // Command line output only
             Simulation sim =
-                new SimulationImpl("Unidade Simulation", model, options);
+                new SimulationImpl("CapturarImagem Simulation", model, options);
             sim.startSimulation(0);
             sim.simulateIterations(Long.MAX_VALUE);
         } else { // Use SimViewer
@@ -226,13 +226,13 @@ public class Unidade extends AtomicModelImpl implements PhaseBased,
         URI dirUri;
         File dir;
         try {
-            dirUri = Unidade.class.getResource(".").toURI();
+            dirUri = CapturarImagem.class.getResource(".").toURI();
             dir = new File(dirUri);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             throw new RuntimeException(
                 "Could not find Models directory. Invalid model URL: " +
-                Unidade.class.getResource(".").toString());
+                CapturarImagem.class.getResource(".").toString());
         }
         boolean foundModels = false;
         while (dir != null && dir.getParentFile() != null) {

@@ -1,5 +1,25 @@
+A ClimaType has a value!
+
+the range of ClimaType's value is boolean!
+
+accepts input on ClimaValue with type ClimaType!
+
 to start passivate in s0!
-when in s0 and receive Comando go to s1!
+when in s0 and receive ClimaValue go to s1!
 hold in s1 for time 2!
-after s1 output ComandoIr!
-from s1 go to s0!
+after s1 output InicialCommand!
+from s1 go to s2!
+hold in s2 for time 2!
+from s2 go to s0!
+after s2 output CI!
+
+external event for s0 with ClimaValue
+<%
+  ClimaType clima = (ClimaType) messageList.get(0).getData();
+  System.out.println("drone clima" + clima);
+  if (Boolean.TRUE.equals(clima.value)) {
+  	holdIn("s2", 2.0);
+  } else {
+  	holdIn("s1", 2.0);
+  }
+%>!

@@ -1,7 +1,7 @@
 /* Do not remove or modify this comment!  It is required for file identification!
 DNL
 platform:/resource/Drone/src/Models/dnl/Drone.dnl
-1027026644
+-177673325
  Do not remove or modify this comment!  It is required for file identification! */
 package Models.java;
 
@@ -46,16 +46,21 @@ public class Drone extends AtomicModelImpl implements PhaseBased,
 
     // Input ports
     //ID:INP:0
-    public final Port<Serializable> inComando =
-        addInputPort("inComando", Serializable.class);
+    public final Port<ClimaType> inClimaValue =
+        addInputPort("inClimaValue", ClimaType.class);
 
     //ENDID
     // End input ports
 
     // Output ports
     //ID:OUTP:0
-    public final Port<Serializable> outComandoIr =
-        addOutputPort("outComandoIr", Serializable.class);
+    public final Port<Serializable> outInicialCommand =
+        addOutputPort("outInicialCommand", Serializable.class);
+
+    //ENDID
+    //ID:OUTP:1
+    public final Port<Serializable> outCI =
+        addOutputPort("outCI", Serializable.class);
 
     //ENDID
     // End output ports
@@ -94,6 +99,15 @@ public class Drone extends AtomicModelImpl implements PhaseBased,
             getSimulator().modelMessage("Internal transition from s1");
 
             //ID:TRA:s1
+            holdIn("s2", 2.0);
+
+            //ENDID
+            return;
+        }
+        if (phaseIs("s2")) {
+            getSimulator().modelMessage("Internal transition from s2");
+
+            //ID:TRA:s2
             passivateIn("s0");
 
             //ENDID
@@ -115,12 +129,24 @@ public class Drone extends AtomicModelImpl implements PhaseBased,
 
         // Fire state transition functions
         if (phaseIs("s0")) {
-            if (input.hasMessages(inComando)) {
-                ArrayList<Message<Serializable>> messageList =
-                    inComando.getMessages(input);
+            if (input.hasMessages(inClimaValue)) {
+                ArrayList<Message<ClimaType>> messageList =
+                    inClimaValue.getMessages(input);
 
                 holdIn("s1", 2.0);
 
+                // Fire state and port specific external transition functions
+                //ID:EXT:s0:inClimaValue
+                ClimaType clima = (ClimaType) messageList.get(0).getData();
+                System.out.println("drone clima" + clima);
+                if (Boolean.TRUE.equals(clima.value)) {
+                    holdIn("s2", 2.0);
+                } else {
+                    holdIn("s1", 2.0);
+                }
+
+                //ENDID
+                // End external event code
                 return;
             }
         }
@@ -143,7 +169,10 @@ public class Drone extends AtomicModelImpl implements PhaseBased,
         MessageBag output = new MessageBagImpl();
 
         if (phaseIs("s1")) {
-            output.add(outComandoIr, null);
+            output.add(outInicialCommand, null);
+        }
+        if (phaseIs("s2")) {
+            output.add(outCI, null);
         }
         return output;
     }
@@ -280,6 +309,6 @@ public class Drone extends AtomicModelImpl implements PhaseBased,
     }
 
     public String[] getPhaseNames() {
-        return new String[] { "s0", "s1" };
+        return new String[] { "s0", "s1", "s2" };
     }
 }

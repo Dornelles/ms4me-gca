@@ -1,7 +1,7 @@
 /* Do not remove or modify this comment!  It is required for file identification!
 DNL
-platform:/resource/Drone/src/Models/dnl/CapturaImg.dnl
--313958446
+platform:/resource/Drone/src/Models/dnl/Lavoura.dnl
+-192891678
  Do not remove or modify this comment!  It is required for file identification! */
 package Models.java;
 
@@ -30,7 +30,7 @@ import com.ms4systems.devs.helpers.impl.SimulationOptionsImpl;
 import com.ms4systems.devs.simviewer.standalone.SimViewer;
 
 @SuppressWarnings("unused")
-public class CapturaImg extends AtomicModelImpl implements PhaseBased,
+public class Lavoura extends AtomicModelImpl implements PhaseBased,
     StateVariableBased {
     private static final long serialVersionUID = 1L;
 
@@ -46,16 +46,16 @@ public class CapturaImg extends AtomicModelImpl implements PhaseBased,
 
     // Input ports
     //ID:INP:0
-    public final Port<Serializable> inCaptura =
-        addInputPort("inCaptura", Serializable.class);
+    public final Port<Serializable> inComando =
+        addInputPort("inComando", Serializable.class);
 
     //ENDID
     // End input ports
 
     // Output ports
     //ID:OUTP:0
-    public final Port<Serializable> outEnviaAnalise =
-        addOutputPort("outEnviaAnalise", Serializable.class);
+    public final Port<Serializable> outVerificarClima =
+        addOutputPort("outVerificarClima", Serializable.class);
 
     //ENDID
     // End output ports
@@ -65,15 +65,15 @@ public class CapturaImg extends AtomicModelImpl implements PhaseBased,
     // This variable is just here so we can use @SuppressWarnings("unused")
     private final int unusedIntVariableForWarnings = 0;
 
-    public CapturaImg() {
-        this("CapturaImg");
+    public Lavoura() {
+        this("Lavoura");
     }
 
-    public CapturaImg(String name) {
+    public Lavoura(String name) {
         this(name, null);
     }
 
-    public CapturaImg(String name, Simulator simulator) {
+    public Lavoura(String name, Simulator simulator) {
         super(name, simulator);
     }
 
@@ -115,9 +115,9 @@ public class CapturaImg extends AtomicModelImpl implements PhaseBased,
 
         // Fire state transition functions
         if (phaseIs("s0")) {
-            if (input.hasMessages(inCaptura)) {
+            if (input.hasMessages(inComando)) {
                 ArrayList<Message<Serializable>> messageList =
-                    inCaptura.getMessages(input);
+                    inComando.getMessages(input);
 
                 holdIn("s1", 2.0);
 
@@ -143,7 +143,7 @@ public class CapturaImg extends AtomicModelImpl implements PhaseBased,
         MessageBag output = new MessageBagImpl();
 
         if (phaseIs("s1")) {
-            output.add(outEnviaAnalise, null);
+            output.add(outVerificarClima, null);
         }
         return output;
     }
@@ -162,12 +162,12 @@ public class CapturaImg extends AtomicModelImpl implements PhaseBased,
 
         // Uncomment the following line to disable logging for this model
         // options.setDisableLogging(true);
-        CapturaImg model = new CapturaImg();
+        Lavoura model = new Lavoura();
         model.options = options;
 
         if (options.isDisableViewer()) { // Command line output only
             Simulation sim =
-                new SimulationImpl("CapturaImg Simulation", model, options);
+                new SimulationImpl("Lavoura Simulation", model, options);
             sim.startSimulation(0);
             sim.simulateIterations(Long.MAX_VALUE);
         } else { // Use SimViewer
@@ -226,13 +226,13 @@ public class CapturaImg extends AtomicModelImpl implements PhaseBased,
         URI dirUri;
         File dir;
         try {
-            dirUri = CapturaImg.class.getResource(".").toURI();
+            dirUri = Lavoura.class.getResource(".").toURI();
             dir = new File(dirUri);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             throw new RuntimeException(
                 "Could not find Models directory. Invalid model URL: " +
-                CapturaImg.class.getResource(".").toString());
+                Lavoura.class.getResource(".").toString());
         }
         boolean foundModels = false;
         while (dir != null && dir.getParentFile() != null) {

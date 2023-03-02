@@ -1,0 +1,29 @@
+A ClimaType has a value!
+the range of ClimaType's value is boolean!
+
+use climaValue with type ClimaType!
+
+generates output on ClimaValue with type ClimaType!
+
+Initialize variables
+<%
+java.util.Random gerador = new java.util.Random();
+boolean estado = gerador.nextBoolean();
+climaValue = new ClimaType(estado);
+%>!
+
+to start passivate in s0!
+when in s0 and receive VerificarClima go to s1!
+hold in s1 for time 1!
+after s1 output ClimaValue!
+from s1 go to s0!
+
+output event for s1
+<%
+	java.util.Random gerador = new java.util.Random();
+	boolean estado = gerador.nextBoolean();
+	climaValue = new ClimaType(estado);
+	output.add(outClimaValue, climaValue);
+%>!
+
+

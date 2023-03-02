@@ -1,5 +1,0 @@
-to start passivate in s0!
-when in s0 and receive ComandoAplicar go to s1!
-hold in s1 for time 2!
-after s1 output Parado!
-from s1 go to s0!

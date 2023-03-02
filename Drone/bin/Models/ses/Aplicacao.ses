@@ -1,9 +1,9 @@
-from the top perspective, Aplicacao is made of Inicial, Unidade, CapturaImg, Aplica, EnviaImg, and Drone!
+from the top perspective, Aplicacao is made of Inicial, Lavoura, Clima, CapturarImagem, Pulverizar, and Drone!
 
-from the top perspective, Inicial sends Comando to Drone! 
-from the top perspective, Drone sends ComandoIr to Unidade!
-from the top perspective, Unidade sends Captura to CapturaImg!
-from the top perspective, CapturaImg sends EnviaAnalise to EnviaImg!
-from the top perspective, EnviaImg sends ComandoAplicar to Aplica!
-from the top perspective, Aplica sends Parado to Inicial!
- 
+from the top perspective, Inicial sends Comando to Lavoura!
+from the top perspective, Lavoura sends VerificarClima to Clima!
+from the top perspective, Clima sends ClimaValue to Drone!
+from the top perspective, Drone sends CI to CapturarImagem!
+from the top perspective, Drone sends InicialCommand to Inicial!
+from the top perspective, CapturarImagem sends PulverizarCommand to Pulverizar!
+from the top perspective, Pulverizar sends InicialCommand to Inicial!

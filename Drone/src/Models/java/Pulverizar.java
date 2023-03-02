@@ -1,7 +1,7 @@
 /* Do not remove or modify this comment!  It is required for file identification!
 DNL
-platform:/resource/Drone/src/Models/dnl/Aplica.dnl
-229165834
+platform:/resource/Drone/src/Models/dnl/Pulverizar.dnl
+923940914
  Do not remove or modify this comment!  It is required for file identification! */
 package Models.java;
 
@@ -30,7 +30,7 @@ import com.ms4systems.devs.helpers.impl.SimulationOptionsImpl;
 import com.ms4systems.devs.simviewer.standalone.SimViewer;
 
 @SuppressWarnings("unused")
-public class Aplica extends AtomicModelImpl implements PhaseBased,
+public class Pulverizar extends AtomicModelImpl implements PhaseBased,
     StateVariableBased {
     private static final long serialVersionUID = 1L;
 
@@ -46,16 +46,16 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
 
     // Input ports
     //ID:INP:0
-    public final Port<Serializable> inComandoAplicar =
-        addInputPort("inComandoAplicar", Serializable.class);
+    public final Port<Serializable> inPulverizarCommand =
+        addInputPort("inPulverizarCommand", Serializable.class);
 
     //ENDID
     // End input ports
 
     // Output ports
     //ID:OUTP:0
-    public final Port<Serializable> outParado =
-        addOutputPort("outParado", Serializable.class);
+    public final Port<Serializable> outInicialCommand =
+        addOutputPort("outInicialCommand", Serializable.class);
 
     //ENDID
     // End output ports
@@ -65,15 +65,15 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
     // This variable is just here so we can use @SuppressWarnings("unused")
     private final int unusedIntVariableForWarnings = 0;
 
-    public Aplica() {
-        this("Aplica");
+    public Pulverizar() {
+        this("Pulverizar");
     }
 
-    public Aplica(String name) {
+    public Pulverizar(String name) {
         this(name, null);
     }
 
-    public Aplica(String name, Simulator simulator) {
+    public Pulverizar(String name, Simulator simulator) {
         super(name, simulator);
     }
 
@@ -94,7 +94,7 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
             getSimulator().modelMessage("Internal transition from s1");
 
             //ID:TRA:s1
-            passivateIn("s0");
+            holdIn("null", Double.POSITIVE_INFINITY);
 
             //ENDID
             return;
@@ -115,9 +115,9 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
 
         // Fire state transition functions
         if (phaseIs("s0")) {
-            if (input.hasMessages(inComandoAplicar)) {
+            if (input.hasMessages(inPulverizarCommand)) {
                 ArrayList<Message<Serializable>> messageList =
-                    inComandoAplicar.getMessages(input);
+                    inPulverizarCommand.getMessages(input);
 
                 holdIn("s1", 2.0);
 
@@ -143,7 +143,7 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
         MessageBag output = new MessageBagImpl();
 
         if (phaseIs("s1")) {
-            output.add(outParado, null);
+            output.add(outInicialCommand, null);
         }
         return output;
     }
@@ -162,12 +162,12 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
 
         // Uncomment the following line to disable logging for this model
         // options.setDisableLogging(true);
-        Aplica model = new Aplica();
+        Pulverizar model = new Pulverizar();
         model.options = options;
 
         if (options.isDisableViewer()) { // Command line output only
             Simulation sim =
-                new SimulationImpl("Aplica Simulation", model, options);
+                new SimulationImpl("Pulverizar Simulation", model, options);
             sim.startSimulation(0);
             sim.simulateIterations(Long.MAX_VALUE);
         } else { // Use SimViewer
@@ -226,13 +226,13 @@ public class Aplica extends AtomicModelImpl implements PhaseBased,
         URI dirUri;
         File dir;
         try {
-            dirUri = Aplica.class.getResource(".").toURI();
+            dirUri = Pulverizar.class.getResource(".").toURI();
             dir = new File(dirUri);
         } catch (URISyntaxException e) {
             e.printStackTrace();
             throw new RuntimeException(
                 "Could not find Models directory. Invalid model URL: " +
-                Aplica.class.getResource(".").toString());
+                Pulverizar.class.getResource(".").toString());
         }
         boolean foundModels = false;
         while (dir != null && dir.getParentFile() != null) {
