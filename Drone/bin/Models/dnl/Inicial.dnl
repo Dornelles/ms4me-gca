@@ -1,0 +1,5 @@
+to start hold in s0 for time 2!
+after s0 output Comando!
+from s0 go to s1!
+passivate in s1!
+when in s1 and receive Parado go to s0!

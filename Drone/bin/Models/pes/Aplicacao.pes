@@ -1,0 +1,4 @@
+set name of model as Aplicacao !
+pruned from Aplicacao.ses !
+mergeAll from Aplicacao.ses !
+write class files !
